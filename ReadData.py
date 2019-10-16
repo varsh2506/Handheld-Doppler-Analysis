@@ -21,85 +21,178 @@ with open('Data.csv', 'r') as f:
 
 #%%
 
-def analyze(data,beat_start,beat_end,fs):
-    
-    beat=data[beat_start:beat_end]
-    Pxx, freqs, times, im = plt.specgram(beat, NFFT=1024, Fs=fs,noverlap=256)
-    plt.show()
-    
-    Pxx=10*np.log10(Pxx)
-    freqmax=np.zeros((len(freqs),len(times)))
-    freqmin=np.zeros((len(freqs),len(times)))
-
-    
-    max_array=np.zeros(len(times))
-    min_array=np.multiply(np.ones(len(times)),22050)
-    range_array=np.zeros(len(times))
-    mean_array=np.zeros(len(times))
-    
-    temp=np.zeros(len(freqs))
-  
-    
-    for j in range(len(times)):
-        for i in range(len(freqs)):
-            if(Pxx[i][j]>=30):
-                freqmax[i][j]=freqs[i]
-            elif(Pxx[i][j]>=0):
-                freqmin[i][j]= freqs[i]
-            
-        max_array[j]=max(freqmax[:,j])
-        temp=freqmin[:,j]
-        temp = temp[np.nonzero(temp)]
-        if(len(temp) == 0):
-            min_array[j] = 22050
-            mean_array[j]= 0
-        else:
-            min_array[j]=min(temp)
-            mean_array[j]=np.mean(temp)        
-        
-    stat_max=max(max_array)
-    stat_min=min(min_array)
-    stat_range=stat_max-stat_min
-    stat_mean=np.mean(mean_array)
-    
-    return stat_max,stat_min,stat_range,stat_mean
+#def analyze(data,beat_start,beat_end,fs):
+#    
+#    beat=data[beat_start:beat_end]
+#    Pxx, freqs, times, im = plt.specgram(beat, NFFT=1024, Fs=fs,noverlap=256)
+#    plt.show()
+#    
+#    Pxx=10*np.log10(Pxx)
+#    freqmax=np.zeros((len(freqs),len(times)))
+#    freqmin=np.zeros((len(freqs),len(times)))
+#
+#    
+#    max_array=np.zeros(len(times))
+#    min_array=np.multiply(np.ones(len(times)),22050)
+#    range_array=np.zeros(len(times))
+#    mean_array=np.zeros(len(times))
+#    
+#    temp=np.zeros(len(freqs))
+#  
+#    
+#    for j in range(len(times)):
+#        for i in range(len(freqs)):
+#            if(Pxx[i][j]>=30):
+#                freqmax[i][j]=freqs[i]
+#            elif(Pxx[i][j]>=0):
+#                freqmin[i][j]= freqs[i]
+#            
+#        max_array[j]=max(freqmax[:,j])
+#        temp=freqmin[:,j]
+#        temp = temp[np.nonzero(temp)]
+#        if(len(temp) == 0):
+#            min_array[j] = 22050
+#            mean_array[j]= 0
+#        else:
+#            min_array[j]=min(temp)
+#            mean_array[j]=np.mean(temp)        
+#        
+#    stat_max=max(max_array)
+#    stat_min=min(min_array)
+#    stat_range=stat_max-stat_min
+#    stat_mean=np.mean(mean_array)
+#    
+#    return stat_max,stat_min,stat_range,stat_mean
 
 
 #%%
+#
+#def index_value(fs,data):
+#    window_size = 0.2*fs
+#    beat = []
+#    time_interval = [0, 0] #Start and end of the beat in terms of seconds
+#    #print(len(data))
+#    #print(window_size)
+#    #print ("Number of windows: ", int((len(data))/window_size))
+#    ct = 0
+#    avg=np.zeros(int((len(data))/window_size))
+#    for i in range(0, int((len(data))/window_size)-1):    
+#        frame = data[int(np.ceil(i*window_size)):int(np.ceil((i+1)*window_size))]
+#        avg[i] = np.mean(np.absolute(frame)) #Computing the average of the signal in each window frame
+#     #   print ("Average", avg[i])
+#    #print(max(avg))
+#    #print(np.mean(avg))
+#    dynamic_threshold=np.mean(avg)
+#    #print(dynamic_threshold)
+#    for i in range(0, int((len(data))/window_size)-1):       
+#        if avg[i]>=dynamic_threshold: #Manually set threshold after observation (might have to be changed)
+#     #       print(i)
+#            if beat==[]:
+#                time_interval[0] = (i*window_size)
+#            for sample in frame:
+#                beat.append(sample)
+#        elif beat!=[]: #Extracting the second beat
+#            ct+=1
+#            if ct==1:
+#                beat = []
+#            else:
+#                time_interval[1] = (i*window_size)
+#                break
+#    return int(time_interval[0]),int(time_interval[1])
 
-def index_value(fs,data):
-    window_size = 0.2*fs
-    beat = []
-    time_interval = [0, 0] #Start and end of the beat in terms of seconds
-    #print(len(data))
-    #print(window_size)
-    #print ("Number of windows: ", int((len(data))/window_size))
-    ct = 0
-    avg=np.zeros(int((len(data))/window_size))
-    for i in range(0, int((len(data))/window_size)-1):    
-        frame = data[int(np.ceil(i*window_size)):int(np.ceil((i+1)*window_size))]
-        avg[i] = np.mean(np.absolute(frame)) #Computing the average of the signal in each window frame
-     #   print ("Average", avg[i])
-    #print(max(avg))
-    #print(np.mean(avg))
-    dynamic_threshold=np.mean(avg)
-    #print(dynamic_threshold)
-    for i in range(0, int((len(data))/window_size)-1):       
-        if avg[i]>=dynamic_threshold: #Manually set threshold after observation (might have to be changed)
-     #       print(i)
-            if beat==[]:
-                time_interval[0] = (i*window_size)
-            for sample in frame:
-                beat.append(sample)
-        elif beat!=[]: #Extracting the second beat
-            ct+=1
-            if ct==1:
-                beat = []
-            else:
-                time_interval[1] = (i*window_size)
-                break
-    return int(time_interval[0]),int(time_interval[1])
+#%%
+def ExtractFreq(beat):
+    beat=data;
+    Pxx, freqs, times, im = plt.specgram(beat,Fs=fs)
+    
+    intervals = len(times);
+    block = np.int(np.ceil(intervals/4));
+    ti1 = np.zeros(int(len(Pxx)))
+    ti2 = np.zeros(int(len(Pxx)))
+    ti3 = np.zeros(int(len(Pxx)))
+    ti4 = np.zeros(int(len(Pxx)))
+    ti1 = np.sum(Pxx[:,0:block-1], axis = 1);
+    ti2 = np.sum(Pxx[:,block:2*block-1], axis = 1)
+    ti3 = np.sum(Pxx[:,2*block:3*block-1], axis = 1)
+    ti4 = np.sum(Pxx[:,3*block:intervals-1], axis = 1)
+    
+    Freq_vals = []
+    cumsum1= np.cumsum(ti1)
+    cumsum1 = cumsum1/max(cumsum1)
+    flag1=0
+    flag2=0
+    for i in range(int(len(cumsum1))):
+        if(cumsum1[i]>0.95):
+            percent95_1 = freqs[i]
+            break
+        elif(cumsum1[i]>0.5 and flag1==0):
+            percent50_1 = freqs[i]
+            flag1=1
+        elif(cumsum1[i]>0.05 and flag2==0):
+            percent5_1=freqs[i]
+            flag2=1;
+    
+    Freq_vals.append(percent95_1)
+    Freq_vals.append(percent50_1)
+    Freq_vals.append(percent5_1)
 
+    
+    cumsum2= np.cumsum(ti2)
+    cumsum2 = cumsum2/max(cumsum2)
+    flag1=0
+    flag2=0
+    for i in range(int(len(cumsum2))):
+        if(cumsum2[i]>0.95):
+            percent95_2 = freqs[i]
+            break
+        elif(cumsum2[i]>0.5 and flag1==0):
+            percent50_2 = freqs[i]
+            flag1=1
+        elif(cumsum2[i]>0.05 and flag2==0):
+            percent5_2=freqs[i]
+            flag2=1;
+ 
+    Freq_vals.append(percent95_2)
+    Freq_vals.append(percent50_2)
+    Freq_vals.append(percent5_2) 
+    
+    cumsum3= np.cumsum(ti3)
+    cumsum3 = cumsum3/max(cumsum3)
+    flag1=0
+    flag2=0
+    for i in range(int(len(cumsum3))):
+        if(cumsum3[i]>0.95):
+            percent95_3 = freqs[i]
+            break
+        elif(cumsum3[i]>0.5 and flag1==0):
+            percent50_3 = freqs[i]
+            flag1=1
+        elif(cumsum3[i]>0.05 and flag2==0):
+            percent5_3=freqs[i]
+            flag2=1;
+    Freq_vals.append(percent95_3)
+    Freq_vals.append(percent50_3)
+    Freq_vals.append(percent5_3)
+    
+    cumsum4= np.cumsum(ti4)
+    cumsum4 = cumsum4/max(cumsum4)
+    flag1=0
+    flag2=0
+    for i in range(int(len(cumsum4))):
+        if(cumsum4[i]>0.95):
+            percent95_4 = freqs[i]
+            break
+        elif(cumsum4[i]>0.5 and flag1==0):
+            percent50_4 = freqs[i]
+            flag1=1
+        elif(cumsum4[i]>0.05 and flag2==0):
+            percent5_4=freqs[i]
+            
+    Freq_vals.append(percent95_4)
+    Freq_vals.append(percent50_4)
+    Freq_vals.append(percent5_4)
+    
+    return Freq_vals
 
 
 #%%
@@ -111,13 +204,13 @@ for i in range(0,no_of_records):
     record = all_files[i]
     #Getting the file name from each record extracted (first column)
     file = record[0]
-    file_name = file + '.wav'
-    file_path = 'HandheldRecorded\\' + file_name
+    file_name = file + '_beat.wav'
+    file_path = 'HandheldRecorded\\' + file_name 
     #Reading corresponding file  
     fs, audio_file =  wavfile.read(file_path)
-    beat_start, beat_end = index_value(fs,audio_file)
-    maxf, minf, rangef,meanf = analyze(audio_file, beat_start, beat_end, fs)
-    energy = sum(np.power(np.asarray(audio_file[beat_start:beat_end]),2))
+    #beat_start, beat_end = index_value(fs,audio_file)
+    #maxf, minf, rangef,meanf = analyze(audio_file, beat_start, beat_end, fs)
+    energy = sum(np.power(np.asarray(beat),2))
     record.extend([maxf,minf,rangef,meanf,energy])
 
 #%%
