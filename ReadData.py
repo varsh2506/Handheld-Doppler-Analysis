@@ -210,8 +210,10 @@ for i in range(0,no_of_records):
     fs, audio_file =  wavfile.read(file_path)
     #beat_start, beat_end = index_value(fs,audio_file)
     #maxf, minf, rangef,meanf = analyze(audio_file, beat_start, beat_end, fs)
-    energy = sum(np.power(np.asarray(beat),2))
-    record.extend([maxf,minf,rangef,meanf,energy])
+    freq_params = ExtractFreq(audio_file)
+    energy = sum(np.power(np.asarray(audio_file),2))
+    record.extend(freq_params)
+    record.append(energy)
 
 #%%
 with open("DataWithParams.csv", "w", newline ='') as f:

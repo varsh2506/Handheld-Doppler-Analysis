@@ -1,6 +1,6 @@
 
 from scipy.io import wavfile
-fs, data = wavfile.read('HandheldRecorded\\cw_ajay_1_17_beat.wav')
+fs, data = wavfile.read('HandheldRecorded\\cw_prateek_325_beat.wav')
 import matplotlib.pyplot as plt
 import numpy as np
 
