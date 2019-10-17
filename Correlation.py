@@ -12,7 +12,7 @@ import numpy as np
 import scipy.stats as scst
 
 
-with open("DataNewParams.csv",mode="r") as f:
+with open("DataX.csv",mode="r") as f:
     csvreader = csv.reader(f)
     all_records = list(csvreader)
 maxf1_array = []

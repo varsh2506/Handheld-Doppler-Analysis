@@ -1,6 +1,7 @@
 
 import csv
-from scipy.io import wavfile 
+from scipy.io import wavfile
+from scipy import signal 
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as scst
@@ -10,9 +11,15 @@ import os
 #%%
 
 
-def ExtractFreq(data):
+def ExtractFreq(data,fs):
+    #data=signal.resample(data,8000)
     Pxx, freqs, times, im = plt.specgram(data,Fs=fs)
-    
+    fmax=8000
+    freq_slice = np.where((freqs <= fmax))
+
+    # keep only frequencies of interest
+    freqs   = freqs[freq_slice]
+    Pxx = Pxx[freq_slice,:][0]
         
     intervals = len(times);
     block = np.int(np.ceil(intervals/4))
@@ -158,17 +165,17 @@ def ExtractFreq(data):
 
 files=os.listdir('HandheldRecorded/BeatExtracted')      
 files.sort()
-'''with open('DataNewParams.csv', mode='w') as datafile: 
+with open('DataNewParams.csv', mode='w') as datafile: 
     datafile_writer = csv.writer(datafile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     for file in files:
         file_path = "HandheldRecorded/BeatExtracted/"+file
         fs, beat = wavfile.read(file_path)
-        freqparam=ExtractFreq(beat)
+        freqparam=ExtractFreq(beat,fs)
         datafile_writer.writerow([file, freqparam[0], freqparam[1], freqparam[2], freqparam[3], freqparam[4], freqparam[5], freqparam[6], freqparam[7], freqparam[8], freqparam[9], freqparam[10], freqparam[11]])
-'''        
         
         
-#fs,data=wavfile.read("HandheldRecorded/BeatExtracted/cw_ranjith_3_48_beat.wav")
+        
+'''#fs,data=wavfile.read("HandheldRecorded/BeatExtracted/cw_ranjith_3_48_beat.wav")
 #freqparams=ExtractFreq(data)
 with open("DataNewParams.csv",mode="r") as f:
     csvreader = csv.reader(f)
@@ -408,4 +415,4 @@ corr24, _ = scst.pearsonr(meanf4_array,depth_array)
 corrs24,v = scst.spearmanr(meanf4_array,depth_array)
 print(covariance_24[0][1])
 print(corr24)
-print(corrs24)
+print(corrs24)'''
