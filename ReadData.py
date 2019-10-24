@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import scipy.stats as scst
+import scipy.signal as sig
+import librosa
 
 #%%
 
@@ -101,55 +103,73 @@ with open('Data.csv', 'r') as f:
 #    return int(time_interval[0]),int(time_interval[1])
 
 #%%
-def ExtractFreq(beat):
-    beat=data;
-    Pxx, freqs, times, im = plt.specgram(beat,Fs=fs)
+def ExtractFreq(data):
+    Pxx, freqs, times, im = plt.specgram(data,Fs=fs)
     
+        
     intervals = len(times);
-    block = np.int(np.ceil(intervals/4));
-    ti1 = np.zeros(int(len(Pxx)))
-    ti2 = np.zeros(int(len(Pxx)))
-    ti3 = np.zeros(int(len(Pxx)))
-    ti4 = np.zeros(int(len(Pxx)))
+    block = np.int(np.ceil(intervals/4))
     ti1 = np.sum(Pxx[:,0:block-1], axis = 1);
     ti2 = np.sum(Pxx[:,block:2*block-1], axis = 1)
     ti3 = np.sum(Pxx[:,2*block:3*block-1], axis = 1)
     ti4 = np.sum(Pxx[:,3*block:intervals-1], axis = 1)
     
+    
     Freq_vals = []
     cumsum1= np.cumsum(ti1)
     cumsum1 = cumsum1/max(cumsum1)
+
     flag1=0
     flag2=0
+    flag3=0
     for i in range(int(len(cumsum1))):
-        if(cumsum1[i]>0.95):
-            percent95_1 = freqs[i]
-            break
-        elif(cumsum1[i]>0.5 and flag1==0):
-            percent50_1 = freqs[i]
+        if(cumsum1[i]>0.95 and flag3==0):
+            if(abs(cumsum1[i]-0.95)<abs(cumsum1[i-1]-0.95)):
+                percent95_1=freqs[i]
+            else:
+                percent95_1 = freqs[i-1]
+            flag3=1
+        if(cumsum1[i]>0.5 and flag1==0):
+            if(abs(cumsum1[i]-0.5)<abs(cumsum1[i-1]-0.5)):
+                percent50_1=freqs[i]
+            else:
+                percent50_1 = freqs[i-1]
             flag1=1
-        elif(cumsum1[i]>0.05 and flag2==0):
-            percent5_1=freqs[i]
+        if(cumsum1[i]>0.05 and flag2==0):
+            if(abs(cumsum1[i]-0.05)<abs(cumsum1[i-1]-0.05)):
+                percent5_1=freqs[i]
+            else:
+                percent5_1 = freqs[i-1]
             flag2=1;
     
     Freq_vals.append(percent95_1)
     Freq_vals.append(percent50_1)
     Freq_vals.append(percent5_1)
-
     
     cumsum2= np.cumsum(ti2)
     cumsum2 = cumsum2/max(cumsum2)
+    
     flag1=0
     flag2=0
+    flag3=0
     for i in range(int(len(cumsum2))):
-        if(cumsum2[i]>0.95):
-            percent95_2 = freqs[i]
-            break
-        elif(cumsum2[i]>0.5 and flag1==0):
-            percent50_2 = freqs[i]
+        if(cumsum2[i]>0.95 and flag3==0):
+            if(abs(cumsum2[i]-0.95)<abs(cumsum2[i-1]-0.95)):
+                percent95_2=freqs[i]
+            else:
+                percent95_2 = freqs[i-1]
+            flag3=1
+        if(cumsum2[i]>0.5 and flag1==0):
+            if(abs(cumsum2[i]-0.5)<abs(cumsum2[i-1]-0.5)):
+                percent50_2=freqs[i]
+            else:
+                percent50_2 = freqs[i-1]
             flag1=1
-        elif(cumsum2[i]>0.05 and flag2==0):
-            percent5_2=freqs[i]
+        if(cumsum2[i]>0.05 and flag2==0):
+            if(abs(cumsum2[i]-0.05)<abs(cumsum2[i-1]-0.05)):
+                percent5_2=freqs[i]
+            else:
+                percent5_2 = freqs[i-1]
             flag2=1;
  
     Freq_vals.append(percent95_2)
@@ -158,17 +178,28 @@ def ExtractFreq(beat):
     
     cumsum3= np.cumsum(ti3)
     cumsum3 = cumsum3/max(cumsum3)
+    
     flag1=0
     flag2=0
+    flag3=0
     for i in range(int(len(cumsum3))):
-        if(cumsum3[i]>0.95):
-            percent95_3 = freqs[i]
-            break
-        elif(cumsum3[i]>0.5 and flag1==0):
-            percent50_3 = freqs[i]
+        if(cumsum3[i]>0.95 and flag3==0):
+            if(abs(cumsum3[i]-0.95)<abs(cumsum3[i-1]-0.95)):
+                percent95_3=freqs[i]
+            else:
+                percent95_3 = freqs[i-1]
+            flag3=1
+        if(cumsum3[i]>0.5 and flag1==0):
+            if(abs(cumsum3[i]-0.5)<abs(cumsum3[i-1]-0.5)):
+                percent50_3=freqs[i]
+            else:
+                percent50_3 = freqs[i-1]
             flag1=1
-        elif(cumsum3[i]>0.05 and flag2==0):
-            percent5_3=freqs[i]
+        if(cumsum3[i]>0.05 and flag2==0):
+            if(abs(cumsum3[i]-0.05)<abs(cumsum3[i-1]-0.05)):
+                percent5_3=freqs[i]
+            else:
+                percent5_3 = freqs[i-1]
             flag2=1;
     Freq_vals.append(percent95_3)
     Freq_vals.append(percent50_3)
@@ -176,18 +207,33 @@ def ExtractFreq(beat):
     
     cumsum4= np.cumsum(ti4)
     cumsum4 = cumsum4/max(cumsum4)
+    
+    #print(cumsum4)
+    #print(freqs)
     flag1=0
     flag2=0
+    flag3=0
     for i in range(int(len(cumsum4))):
-        if(cumsum4[i]>0.95):
-            percent95_4 = freqs[i]
-            break
-        elif(cumsum4[i]>0.5 and flag1==0):
-            percent50_4 = freqs[i]
+        if(cumsum4[i]>0.95 and flag3==0):
+            if(abs(cumsum4[i]-0.95)<abs(cumsum4[i-1]-0.95)):
+                percent95_4=freqs[i]
+            else:
+                percent95_4 = freqs[i-1]
+            flag3=1
+        if(cumsum4[i]>0.5 and flag1==0):
+            if(abs(cumsum4[i]-0.5)<abs(cumsum4[i-1]-0.5)):
+                percent50_4=freqs[i]
+            else:
+                percent50_4 = freqs[i-1]
             flag1=1
-        elif(cumsum4[i]>0.05 and flag2==0):
-            percent5_4=freqs[i]
-            
+            #print(percent50_4)
+        if(cumsum4[i]>0.05 and flag2==0):
+            if(abs(cumsum4[i]-0.05)<abs(cumsum4[i-1]-0.05)):
+                percent5_4=freqs[i]
+            else:
+                percent5_4 = freqs[i-1]
+            #print(percent5_4)
+            flag2=1;
     Freq_vals.append(percent95_4)
     Freq_vals.append(percent50_4)
     Freq_vals.append(percent5_4)
@@ -207,7 +253,9 @@ for i in range(0,no_of_records):
     file_name = file + '_beat.wav'
     file_path = 'HandheldRecorded\\' + file_name 
     #Reading corresponding file  
-    fs, audio_file =  wavfile.read(file_path)
+    fs, audio_file = librosa.load(file_path, sr=16000)
+    #fs, audio_file =  wavfile.read(file_path)
+    #beat = sig.resample()
     #beat_start, beat_end = index_value(fs,audio_file)
     #maxf, minf, rangef,meanf = analyze(audio_file, beat_start, beat_end, fs)
     freq_params = ExtractFreq(audio_file)
@@ -216,7 +264,7 @@ for i in range(0,no_of_records):
     record.append(energy)
 
 #%%
-with open("DataWithParams.csv", "w", newline ='') as f:
+with open("DataWithParams_1.csv", "w", newline ='') as f:
     writer = csv.writer(f)
     writer.writerows(all_files)
 
