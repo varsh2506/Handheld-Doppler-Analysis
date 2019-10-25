@@ -35,6 +35,7 @@ def ExtractFreq(data,fs):
     cumsum1= np.cumsum(ti1)
     cumsum1 = cumsum1/max(cumsum1)
 
+    
     flag1=0
     flag2=0
     flag3=0
