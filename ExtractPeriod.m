@@ -1,14 +1,14 @@
 function HeartRate = ExtractPeriod(data,fs)
 
-    len = length(data)
+    len = length(data);
     
     %Defining max and min period
     maxBPM = 100;
     minBPM = 50;
     maxf = maxBPM/60;
     minf = minBPM/60;
-    minPeriod = floor(fs/maxf)
-    maxPeriod = ceil(fs/minf)
+    minPeriod = floor(fs/maxf);
+    maxPeriod = ceil(fs/minf);
     
     %Taking 4 seconds of data for analysis
     DataSlice = data(1:floor(len/4));

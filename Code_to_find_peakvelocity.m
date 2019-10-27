@@ -19,3 +19,5 @@ for i = 1:iter
     max_freq_vector(i) = max([1; find(abs(seg_fft(1:fs/2,i))>=thresh)]); 
 end
 max_freq = max(max_freq_vector) 
+
+
