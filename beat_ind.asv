@@ -29,12 +29,10 @@ function [beats,index,diff_indices,best_beat] = beat_ind(data, fs)
         diff_indices(k)=index(j+1)-index(j);
         k=k+1;
     end
-    threshold1 =mean(diff_indices);
-    threshold2 = 2*threshold1;
+    threshold=mean(diff_indices);
     k=1;
     for j=1:2:length(index)
-        duration = index(j+1) - index(j);
-        if( duration >= threshold1 && duration < threshold2)
+        if((index(j+1)-index(j))>=threshold)
             best_beat(k)=index(j);
             best_beat(k+1)=index(j+1);
             k=k+2;
