@@ -1,4 +1,4 @@
-function high_energy_indices = best_five_beats(data, best_beat)
+function [high_energy_indices, sortedEnergy] = best_five_beats(data, best_beat)
     k=1;
     for i=1:2:length(best_beat)
         beat = data(best_beat(i):best_beat(i+1));
