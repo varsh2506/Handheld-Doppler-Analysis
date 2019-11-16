@@ -1,4 +1,4 @@
-function HeartRate = ExtractPeriod(data,fs)
+function [HeartRate, aPoslag,a,pks] = ExtractPeriod(data,fs)
 
     len = length(data);
     

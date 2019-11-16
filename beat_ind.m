@@ -1,4 +1,4 @@
-function [beats,index,diff_indices,best_beat] = beat_ind(data, fs)
+function [beats,index,diff_indices,best_beat,threshold1,threshold2] = beat_ind(data, fs)
 
     window_length = 0.010*fs;
     beats = zeros(size(data));
