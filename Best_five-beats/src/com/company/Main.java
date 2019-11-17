@@ -9,16 +9,6 @@ import java.util.Arrays;
 
 
 
-class store{
-    int []high_energy_in = new int[10] ;
-    int [] best_energy = new int[20];
-    public store(int[] high, int [] best_en)
-    {
-        this.high_energy_in = high;
-        this.best_energy = best_en;
-    }
-
-}
 
 public class Main
 {
@@ -40,8 +30,6 @@ public class Main
             // if the i-th element is t
             // then return the index
             if (arr[index] == t) {
-                //System.out.printf("%d ",index);
-                //System.out.printf("%f ",arr[index]);
                 return index;
             }
             else {
@@ -54,10 +42,10 @@ public class Main
     public static void main(String[] args) throws IOException,WavFileException
     {
         long startTime = System.nanoTime();// Open the wav file
-        WavFile wavFile = WavFile.openWavFile(new File("/home/kshama/Handheld-Doppler-Analysis/TryWav/HandheldRecorded/cw_adiveppa_4_19.wav"));
+        WavFile wavFile = WavFile.openWavFile(new File("C:\\Users\\admin\\Desktop\\WavFile\\cw_adiveppa_4_19.wav"));
 
         // Display information about the wav file
-        wavFile.display();
+        //wavFile.display();
 
         //Get the number of frames in the wav file
         int numFrames = (int) wavFile.getNumFrames();
@@ -149,10 +137,9 @@ public class Main
         }
 
         k=0;
-
         double[] beat_energy = new double[best_beat.length/2]; int[] best_energy = new int[5]; int [] high_energy_indices = new int[10];
         for (int i=0; i<best_beat.length; i+=2)
-        {   //beat = new double [best_beat[i+1]-best_beat[i]];
+        {
             double [] beat = Arrays.copyOfRange(data, best_beat[i], best_beat[i+1]);
             beat_energy[k]=0;
             for (int j=0; j<beat.length; j+=1)
@@ -163,7 +150,6 @@ public class Main
         }
         double [] beat_energy_copy = new double[beat_energy.length];
         System.arraycopy(beat_energy,0, beat_energy_copy, 0, beat_energy.length);
-        System.out.println("\n") ;
         Arrays.sort(beat_energy);
         //sort in descending order
         //Collections.reverse(Arrays.asList(beat_energy));
@@ -173,20 +159,17 @@ public class Main
             beat_energy[i] = beat_energy[beat_energy.length -i-1 ];
             beat_energy[beat_energy.length -i-1 ] = temp;
         }
-        for(int z=0;z<beat_energy_copy.length;z++)
-            System.out.printf("%f ",beat_energy_copy[z]);
-        double [] beat_energy_5 = Arrays.copyOfRange(beat_energy, 0, 3);//sortedEnergy
-        //System.out.println(beat_energy_5[1]);
+        double [] beat_energy_5 = Arrays.copyOfRange(beat_energy, 0, 5);//sortedEnergy
+        System.out.printf("High energy beats\n");
+        for(int z=0;z<beat_energy_5.length;z++)
+            System.out.printf("%f ",beat_energy_5[z]);
         k=0;
         double test;
         for( int i=0;i<beat_energy_5.length;i++)
         {
-            //System.out.printf("%f ",beat_energy_5[i]);
             best_energy[k] = findIndex(beat_energy_copy, beat_energy_5[i]); //finding the index of each beat
             k=k+1;
         }
-        /*for(int z=0;z<best_energy.length;z++)
-            System.out.printf("%d ",best_energy[z]);*/
         k=0;
         for (int j = 0;j<best_energy.length;j++)
         {
@@ -194,8 +177,9 @@ public class Main
             high_energy_indices[k+1] = best_beat[2*best_energy[j]+1];
             k=k+2;
         }
-        //System.out.printf("%d %d\n", high_energy_indices[0],best_energy[0] );
-        //return new store(high_energy_indices,best_energy);
+        System.out.printf("\nHigh energy indices\n");
+        for(int z=0;z<high_energy_indices.length;z++)
+            System.out.printf("%d ",high_energy_indices[z]);
         wavFile.close();
 
     }
