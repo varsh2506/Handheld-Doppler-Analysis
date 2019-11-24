@@ -7,8 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="com.github.wendykierp:JTransforms:3.1" level="project" />
-    <orderEntry type="module" module-name="wavfile" />
-    <orderEntry type="module" module-name="wavexception" />
+    <orderEntry type="library" name="JLargeArrays-1.5-javadoc" level="project" />
+    <orderEntry type="library" name="commons-math3-3.5-javadoc" level="project" />
   </component>
 </module>

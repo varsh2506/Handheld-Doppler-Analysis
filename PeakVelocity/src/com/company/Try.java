@@ -1,7 +1,7 @@
 package com.company;
 
-import com.company.WavFileException;
-import com.company.WavFile;
+import com.company.WavFile.WavFile;
+import com.company.WavFileException.WavFileException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 
 
-public class Main
+public class Try
 {
     public static int findIndex(double arr[], double t)
     {
@@ -39,10 +39,10 @@ public class Main
         return -1;
     }
 
-    public static void main(String[] args) throws IOException,WavFileException
+    public static void main(String file_path) throws IOException,WavFileException
     {
         long startTime = System.nanoTime();// Open the wav file
-        WavFile wavFile = WavFile.openWavFile(new File("C:\\Users\\admin\\Desktop\\WavFile\\cw_adiveppa_4_19.wav"));
+        WavFile wavFile = WavFile.openWavFile(new File(file_path));
 
         // Display information about the wav file
         //wavFile.display();
@@ -162,7 +162,7 @@ public class Main
         double [] beat_energy_5 = Arrays.copyOfRange(beat_energy, 0, 5);//sortedEnergy
         //System.out.printf("High energy beats\n");
         //for(int z=0;z<beat_energy_5.length;z++)
-          //  System.out.printf("%f ",beat_energy_5[z]);
+        //  System.out.printf("%f ",beat_energy_5[z]);
         k=0;
         double test;
         for( int i=0;i<beat_energy_5.length;i++)
@@ -170,20 +170,30 @@ public class Main
             best_energy[k] = findIndex(beat_energy_copy, beat_energy_5[i]); //finding the beat number
             k=k+1;
         }
-        k=0;
-        for (int j = 0;j<best_energy.length;j++)
-        {
-            high_energy_indices[k] = best_beat[(2*best_energy[j])];
-            high_energy_indices[k+1] = best_beat[2*best_energy[j]+1];
-            k=k+2;
-        }
+
         //System.out.printf("\nHigh energy indices\n");
         //for(int z=0;z<high_energy_indices.length;z++)
-          //  System.out.printf("%d ",high_energy_indices[z]);
-	return beat_energy_5[0];
+        //  System.out.printf("%d ",high_energy_indices[z]);
+
         wavFile.close();
+        double [] energyPlusBeats = new double[11];
+        energyPlusBeats[0] = beat_energy_5[0];
+        k =1;
+        for (int j = 0;j<best_energy.length;j++)
+        {
+            energyPlusBeats[k] = best_beat[(2*best_energy[j])];
+            energyPlusBeats[k+1] = best_beat[2*best_energy[j]+1];
+            k=k+2;
+        }
+        int[] indices = new int[10];
+        for (int i=0;i<10;i++){
+            indices[i] = (int)energyPlusBeats[i+1];
+        }
+        System.out.println(MaxFreq.freq("/Varshini_Data/G_DATA/ECE-Semester7/MajorProject/Handheld-Doppler-Analysis/HandheldRecorded/cw_adiveppa_4_19.wav",indices));
+
 
     }
+
     public static double calculateMax(double numArray[])
     {
         double max = Double.MIN_VALUE;

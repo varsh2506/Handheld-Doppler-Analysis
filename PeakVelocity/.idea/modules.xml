@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PeakVelocity.iml" filepath="$PROJECT_DIR$/PeakVelocity.iml" />
-      <module fileurl="file://$USER_HOME$/Handheld-Doppler-Analysis/ExtractPeriod/src/com/company/wavexception/wavexception.iml" filepath="$USER_HOME$/Handheld-Doppler-Analysis/ExtractPeriod/src/com/company/wavexception/wavexception.iml" />
-      <module fileurl="file://$USER_HOME$/Handheld-Doppler-Analysis/ExtractPeriod/src/com/company/wavfile/wavfile.iml" filepath="$USER_HOME$/Handheld-Doppler-Analysis/ExtractPeriod/src/com/company/wavfile/wavfile.iml" />
     </modules>
   </component>
 </project>
