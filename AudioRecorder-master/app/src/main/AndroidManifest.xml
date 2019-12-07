@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.dimowner.audiorecorder">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="true" />
+
+    <application
+        android:name=".ARApplication"
+        android:allowBackup="false"
+        android:hardwareAccelerated="@bool/useHardwareAcceleration"
+        android:icon="@mipmap/audio_recorder_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/audio_recorder_logo"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".app.main.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".app.records.RecordsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".app.settings.SettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".app.info.ActivityInformation"
+            android:screenOrientation="portrait" />
+        <activity android:name=".debug.HeartRate"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".app.RecordingService" />
+        <service android:name=".app.PlaybackService" /> <!-- <meta-data -->
+        <!-- android:name="io.fabric.ApiKey" -->
+        <!-- android:value="a911efb38fc3ed01944c7ea4410acde51d847864" /> -->
+        <receiver android:name=".app.RecordingService$StopRecordingReceiver" />
+        <receiver android:name=".app.PlaybackService$StopPlaybackReceiver" />
+
+        <provider
+            android:name=".AppFileProvider"
+            android:authorities="${applicationId}.app_file_provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+    </application>
+
+</manifest>
